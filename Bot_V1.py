@@ -3,7 +3,9 @@ from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
 import string
 import numpy as np
-
+import tensorflow as tf
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 # Download NLTK data
 #nltk.download('punkt')
@@ -35,12 +37,6 @@ def preprocess(data):
 # Preprocess data
 processed_data = [preprocess(qa) for qa in raw_data.split('\n')]
 
-
-
-
-import tensorflow as tf
-from tensorflow.keras.preprocessing.text import Tokenizer
-from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 # Set parameters
 vocab_size = 1280
