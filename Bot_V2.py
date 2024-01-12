@@ -65,21 +65,21 @@ try:
 except:
     # Build model
     model = tf.keras.Sequential([
-    tf.keras.layers.Embedding(total_words, 300, input_length=max_sequence_len-1),
-    tf.keras.layers.Dropout(0.2),
-    #tf.keras.layers.Conv1D(64, 5, activation='relu'),
-    #tf.keras.layers.MaxPooling1D(pool_size=5),
-    tf.keras.layers.LSTM(150),
+    tf.keras.layers.Embedding(total_words, 2000, input_length=max_sequence_len-1),
+    #tf.keras.layers.Dropout(0.2),
+    tf.keras.layers.Conv1D(50, 5, activation='relu'),
+    tf.keras.layers.MaxPooling1D(pool_size=5),
+    tf.keras.layers.LSTM(50),
     #tf.keras.layers.Dense(150, activation='relu'),
     tf.keras.layers.Dense(total_words, activation='softmax')
     ])
     earlystop = EarlyStopping(monitor='loss', min_delta=0, patience=3, verbose=0, mode='auto')
-    adam = Adam(learning_rate=0.01)
+    adam = Adam(learning_rate=0.1)
     model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
-    history = model.fit(xs, ys, epochs=10, verbose=1,callbacks=[earlystop])
+    history = model.fit(xs, ys, epochs=1, verbose=1,callbacks=[earlystop])
     model.save(model_name)
     #print model.summary()
-    #print(model)
+    #print(model)``
 
 
 
@@ -100,13 +100,14 @@ def plot_graphs(history, string):
 def predict_answer(model, tokenizer, question):
     seed_text = question
     keep=True
+    num_words=0
     response = ""
-    while keep:
+    while num_words<10:
         token_list = tokenizer.texts_to_sequences([seed_text])[0]
         token_list = pad_sequences([token_list], maxlen=max_sequence_len-1, padding='pre')
         predicted = np.argmax(model.predict(token_list,verbose = 0), axis=-1)
         prediction = np.max(model.predict(token_list,verbose = 0), axis=-1)
-        if prediction > 0.5:
+        if prediction > 0.3:
             keep=True
         else:
              keep=False
@@ -117,6 +118,7 @@ def predict_answer(model, tokenizer, question):
                 break
         seed_text += " " + output_word
         response += " " + output_word
+        num_words +=1 
     return response
 
 #%%
