@@ -12,17 +12,28 @@ from tensorflow.keras.callbacks import EarlyStopping
 import matplotlib.pyplot as plt
 
 #%%
-model_name="Motibot.keras"
+model_name="Motibot2.keras"
 
-tokenizer = Tokenizer()
+import os
+data = ""
+def get_files(path):
+    for file in os.listdir(path):
+        if os.path.isfile(os.path.join(path, file)):
+            yield file
 
-# Load data
-with open('data.txt', 'r', encoding='utf-8') as f:
-    data = f.read()
+
+for file in get_files('Training'):
+    # Load data
+    with open('Training/'+file, 'r', encoding='utf-8') as f:
+        data += f.read()
+        data += "\n"
 
 
+
+
+#%%
 corpus = data.lower().split("\n")
-
+tokenizer = Tokenizer()
 tokenizer.fit_on_texts(corpus)
 total_words = len(tokenizer.word_index) + 1
 
