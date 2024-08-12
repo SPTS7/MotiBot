@@ -31,3 +31,4 @@ while True:
 
     response = generate_response(user_input)
     print("Chatbot:", response)
+# %%
